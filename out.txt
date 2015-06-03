@@ -1,0 +1,79 @@
+3	10	10
+1 window:	 Runtime=10 msecs	1-Window:: 7 Clusters
+{1,},{2,3,},{4,7,6,},{5,},{8,9,10,11,},{12,13,15,},{14,},
+
+2 window:	 Runtime=0 msecs	2-Window:: 6 Clusters
+{1,},{2,3,},{4,7,6,},{5,},{8,9,10,11,},{12,14,13,15,},
+
+3 window:	 Runtime=0 msecs	3-Window:: 7 Clusters
+{1,},{2,3,},{4,6,7,},{5,},{8,9,10,11,},{12,14,},{13,15,},
+
+4 window:	 Runtime=0 msecs	4-Window:: 7 Clusters
+{1,},{2,3,},{4,6,7,},{5,},{8,9,10,11,},{12,13,15,},{14,},
+
+5 window:	 Runtime=0 msecs	5-Window:: 6 Clusters
+{1,},{2,3,},{4,6,7,},{5,},{8,9,10,11,},{12,14,13,15,},
+
+6 window:	 Runtime=0 msecs	6-Window:: 5 Clusters
+{1,},{2,3,},{4,6,5,7,},{8,9,10,11,},{12,14,13,15,},
+
+7 window:	 Runtime=0 msecs	7-Window:: 7 Clusters
+{1,},{2,3,},{4,7,6,},{5,},{8,9,10,11,},{12,13,15,},{14,},
+
+8 window:	 Runtime=0 msecs	8-Window:: 7 Clusters
+{1,},{2,3,},{4,6,7,},{5,},{8,9,10,11,},{12,13,15,},{14,},
+
+9 window:	 Runtime=0 msecs	9-Window:: 6 Clusters
+{1,},{2,3,},{4,6,5,7,},{8,9,10,11,},{12,13,15,},{14,},
+
+10 window:	 Runtime=0 msecs	10-Window:: 6 Clusters
+{1,},{2,3,},{4,6,5,7,},{8,9,10,11,},{12,13,15,},{14,},
+
+11 window:	 Runtime=0 msecs	11-Window:: 6 Clusters
+{1,},{2,3,},{4,7,5,6,},{8,9,10,11,},{12,13,15,},{14,},
+
+12 window:	 Runtime=0 msecs	12-Window:: 6 Clusters
+{1,},{2,3,},{4,7,6,5,},{8,9,10,11,},{12,13,15,},{14,},
+
+13 window:	 Runtime=20 msecs	13-Window:: 7 Clusters
+{1,},{2,3,},{4,7,6,},{5,},{8,9,10,11,},{12,13,15,},{14,},
+
+14 window:	 Runtime=0 msecs	14-Window:: 6 Clusters
+{1,},{2,3,},{4,5,6,7,},{8,9,10,11,},{12,13,14,},{15,},
+
+15 window:	 Runtime=0 msecs	15-Window:: 7 Clusters
+{1,},{2,3,},{4,5,7,},{6,},{8,9,10,11,},{12,13,14,},{15,},
+
+16 window:	 Runtime=0 msecs	16-Window:: 8 Clusters
+{1,},{2,3,},{4,},{5,7,},{6,},{8,9,10,11,},{12,14,13,},{15,},
+
+17 window:	 Runtime=0 msecs	17-Window:: 7 Clusters
+{1,},{2,3,},{4,5,6,7,},{8,9,10,11,},{12,},{13,15,},{14,},
+
+18 window:	 Runtime=0 msecs	18-Window:: 8 Clusters
+{1,},{2,3,},{4,7,5,},{6,},{8,9,10,11,},{12,},{13,15,},{14,},
+
+19 window:	 Runtime=0 msecs	19-Window:: 7 Clusters
+{1,},{2,3,},{4,5,7,},{6,},{8,9,10,11,},{12,13,14,},{15,},
+
+20 window:	 Runtime=0 msecs	20-Window:: 6 Clusters
+{1,},{2,3,},{4,5,7,6,},{8,9,10,11,},{12,14,},{13,15,},
+
+21 window:	 Runtime=0 msecs	21-Window:: 8 Clusters
+{1,},{2,3,},{4,},{5,6,7,},{8,9,10,11,},{12,13,},{14,},{15,},
+
+22 window:	 Runtime=0 msecs	22-Window:: 7 Clusters
+{1,},{2,3,},{4,},{5,6,7,},{8,9,10,11,},{12,13,14,},{15,},
+
+23 window:	 Runtime=0 msecs	23-Window:: 6 Clusters
+{1,},{2,3,},{4,5,6,7,},{8,9,10,11,},{12,13,14,},{15,},
+
+24 window:	 Runtime=0 msecs	24-Window:: 9 Clusters
+{1,},{2,3,},{4,},{5,7,},{6,},{8,9,10,11,},{12,13,},{14,},{15,},
+
+25 window:	 Runtime=0 msecs	25-Window:: 6 Clusters
+{1,},{2,3,},{4,5,6,7,},{8,9,10,11,},{12,13,14,},{15,},
+
+26 window:	 Runtime=10 msecs	26-Window:: 6 Clusters
+{1,},{2,3,},{4,5,7,6,},{8,9,10,11,},{12,13,14,},{15,},
+
