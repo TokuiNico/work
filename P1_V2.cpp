@@ -66,6 +66,7 @@ int main(int argc, char *argv[]){
 	filename=(char *)malloc(256);
 	input=(char *)malloc(256);
 
+    //輸入檔案名稱, windows size, error speed, near in r meters
 	cin>>filename>>sizeW>>eSpeed>>r;
 	cout<<sizeW<<"	"<<eSpeed<<"	"<<r<<endl;
 	r=r*1000;
@@ -73,26 +74,38 @@ int main(int argc, char *argv[]){
 	ifstream infile(input);	
 
 	Sensor tempS;
+    //讀檔 第一行: columns數
 	infile>>numColumns;
 
+    //sensor time slot 數
 	tempS.numTs=numColumns-2;
+    //windows number 數: time_slot/window_size
 	numW=(numColumns-2)/sizeW;
-	infile>>numSen;
+	//讀檔 第二行: senser 數
+    infile>>numSen;
+    //讀檔 第三行: 方向
 	infile>>tempS.dir;	
 	//cout<<numColumns<<endl;
 	//cout<<numSen<<endl;	
 	//cout<<tempS.dir;
 
-	for(int i=0; i<numSen; i++){		
+    //依序讀完所有檔案
+	for(int i=0; i<numSen; i++){
+        // read id
 		infile>>tempS.id;	
-		infile>>tempS.y;				
+        // read location
+		infile>>tempS.y;
+        // read speed in every time slot
 		for(int j=0; j<tempS.numTs; j++){
 			infile>>Speed;	
 			tempS.Sp.push_back(Speed);			
 		}
-		listS.push_back(tempS);		
+        // save sensor
+		listS.push_back(tempS);
+        // erase old speed data
 		tempS.Sp.erase(tempS.Sp.begin(), tempS.Sp.end());		
-	}	
+	}
+	
 	//output the listS
 	#if 0	
 	for(int i=0; i<listS.size(); i++){	
@@ -122,26 +135,32 @@ int main(int argc, char *argv[]){
 		//compute distance for upper triangle of M
 		for(int i=0; i<listS.size(); i++){
 			for(int j=i+1; j<listS.size(); j++){
+                //M[i][j] = 兩sensor location距離
 				M[i][j]=abs(listS.at(i).y - listS.at(j).y);
 			}
-		}		
+		}
 		//compute dissimilarity
 		Board h;
 		float s;
 		Itemset tempI;
 		for(int j=0; j<listS.size(); j++){
 			//h.exist=true;
+            //push sensor id
 			h.C.item.push_back(j+1);
 			for(int i=j+1; i<listS.size(); i++){
+                //push sensor id
 				tempI.item.push_back(i+1);
 				h.NS.push_back(tempI);
 				tempI.item.erase(tempI.item.begin(), tempI.item.end());
 				s=0;
+                
+                //計算 sensor j 和 i 在此slide windows內速度差平方的平均
 				for(int k=0; k<sizeW; k++){
 					s=s+pow(listS.at(i).Sp.at(iW*sizeW+k)-listS.at(j).Sp.at(iW*sizeW+k),2);
-				}					
+				}
 				s=sqrt(s/sizeW);
 				h.diss.push_back(s);
+                若
 				if(s<=eSpeed){
 					if(M[j][i]<=r) M[i][j]=1;	//immedate edge
 					else M[i][j]=0;	//hidden edge
