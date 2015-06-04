@@ -1,5 +1,5 @@
 /*
-	Filter transformedTraDB.dat with non-repeating Rid in each Trajectory
+	Filter transformedTraDB.dat with "non-repeating" Rid in each Trajectory
 	Filter trajectories that do not have regions (i.e., numRid=0)
 */
 

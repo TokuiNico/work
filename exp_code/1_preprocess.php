@@ -1,5 +1,9 @@
 <?php
-
+/***********************************************
+*   input: trajectories,density of grids
+*   output: ROI sequences
+*   format traID numRid Rid1 Rid2 ...
+************************************************/
 error_reporting(E_ERROR & ~E_NOTICE & ~E_WARNING );
 //error_reporting(E_ALL);
 include("../PostgreDB.class.php");
@@ -64,6 +68,11 @@ fclose($file);
 
 
 $db=new PostgreDB();
+
+/***************************************************************
+* 將 trajectory 轉換成 frequent region 順序
+****************************************************************/
+//---------------query all trajectory id-------------------
 $result=$db->query("SELECT tid FROM trajectory ORDER BY tid ASC");
 //$result=$db->query("SELECT distinct(tid) FROM traofuser ORDER BY tid ASC"); //for hits
 $file2=fopen($filename2,"a");
@@ -71,6 +80,7 @@ for($i=0; $i< $db->num_rows(); $i++){
 	echo $i." "."running... \n";
 	$tid=pg_result($result,$i,'tid');
 	$db_1=new PostgreDB();
+    //-------------query all points( lon & lat ) in trajectory $tid -----------------------
 	$result_1=$db_1->query("SELECT tid,index,lon,lat FROM gpspoint WHERE tid=$tid ORDER BY index ASC");
 	echo $tid." ".$db_1->num_rows()."\n";
 	$indexTra=1;
@@ -81,6 +91,7 @@ for($i=0; $i< $db->num_rows(); $i++){
 		$lat=pg_result($result_1, $j, 'lat');
 		$db_2=new PostgreDB();
 		//echo $j."\t".$lon."\t".$lat;
+        //-------------對每個point找在其位置的frequent rid----------------------------//
 		$result_2=$db_2->query("SELECT rid FROM grid3x WHERE point'($lon,$lat)' @ range AND density>=$densityThreshold");//<--------- grid?x
 		//echo $db_2->num_rows()."\t";
 		$rid=pg_result($result_2,0);
@@ -94,7 +105,10 @@ for($i=0; $i< $db->num_rows(); $i++){
 	}
 	$listTra[$i][0]=$numRid;
 	//echo "\n".$tid." ";
+    
+    //輸出 trajectory id 和 number of rid
 	fputs($file2,$tid." ".$listTra[$i][0]);
+    //輸出 trajectory tid 的所有 rid number
 	for($j=1; $j<= $listTra[$i][0]; $j++){
 		//echo $listTra[$i][$j]." ";
 		fputs($file2," ".$listTra[$i][$j]);
