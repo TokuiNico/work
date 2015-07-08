@@ -11,7 +11,7 @@
  *              numRid rid_b1 rid_b2…
  * Output
  *  database grid3x_edge
- *      format: numRid rid_b1 rid_b2…
+ *      format: rid_f rid_b tid
  **/
 	error_reporting(E_ERROR & ~E_NOTICE & ~E_WARNING );
 	//error_reporting(E_ALL);
