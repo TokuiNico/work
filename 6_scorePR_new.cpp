@@ -20,12 +20,15 @@
 #include <stdlib.h>
 #include <string.h>
 using namespace std;
+
 /**
- * 
+ * a directed edge with weight
  *
- * @param   rid_f
- * @param   rid_b
- * @param   weight
+ * @param   rid_f       forward region id
+ * @param   rid_b       backward region id
+ * @param   weight      weight of edge
+ *
+ * rid_b <- rid f
  **/
 class Edge{
 	public:
@@ -33,13 +36,14 @@ class Edge{
 		int rid_b;
 		float weight;
 };
+
 /**
  *
  *
- * @param   rid
- * @param   score
- * @param   inLink
- * @param   weight
+ * @param   rid         region id
+ * @param   score       score of region
+ * @param   inLink      the list containing rid_f
+ * @param   weight      the list of weight of inlink rid_f
  **/
 class region{
 	public:
@@ -48,13 +52,13 @@ class region{
 		vector<int> inLink; //rid_f
 		vector<float> weight; //rid_f -> rid_b
 };
-
 vector<region> PR;
+
 /**
  * return the score of given region
  *
- * @param   rid     region id
- * @return          the score of region
+ * @param   rid         region id
+ * @return              the score of region
  **/
 float seekScore(int rid){
 	float score;
@@ -69,14 +73,17 @@ float seekScore(int rid){
 
 int main(int argc, char *argv[])
 {
-	/********************************************************************************************************************
-		Compute scores from inlinks 
-		Parameters
-	*********************************************************************************************************************/
 	//Lines: 47,60,125
-	float alpha=0.2;
-	int totalRound=100;	
+
 	
+    /**
+     * Step1:   Get  a list of rid and score from ridlist.in,
+     *          then save the rid and score of file to a list of region PR
+     *
+     * @param   rid         region id
+     * @param   score       density of region
+     * @param   PR          a list of saving regions
+     **/
 	ifstream in_1("link/grid3x/ridlist.in");	//<------------------------------------------------------------------------
 
 	int rid, score, numRid=0;
@@ -90,6 +97,14 @@ int main(int argc, char *argv[])
 	}	
 	in_1.close();
 
+    /**
+     * Step2:   Get a list of rid_f, rid_b, and weight from weight.in,
+     *          then push the rid_f and weight to PR if rid_b is matching
+     *
+     * @param   rid_f       the region id link to
+     * @param   rid_b       the region id to link
+     * @param   weight      the calculated weight of each edge
+     **/
 	ifstream in_2("link/grid3x/weight.in");	//<------------------------------------------------------------------------
 	int rid_f,rid_b;
 	float weight;
@@ -120,6 +135,17 @@ int main(int argc, char *argv[])
 	}	
 	in_2.close();
 	
+    /**
+     * Step3:   Calculate the real score of each region.
+     *          Find all region id, weight of edge, and score from all inlink regions,
+     *          then add its score multiplying its weight and proportion
+     *
+     * @param   alpha       the proportion between the score itself and the score from inlink region
+     * @param   totalRound  total round to calculate score
+     **/
+    float alpha=0.2;
+	int totalRound=100;	
+    
 	for(int round=0; round<totalRound; round++){
 		cout<<(round+1)<<" - Round .........."<<endl;
 		float tempPRscore[50000];
@@ -154,7 +180,9 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	//Update scores
+	/**
+     * Step4:   Update scores, export rid and updated score to grid3x_PRscore_new_0.2.txt
+     **/
 	ofstream out_1("link/grid3x/grid3x_PRscore_new_0.2.txt");	//grid_hits_PRscore.txt<------------------------------------------------------------------------
 	for(int i=0; i<PR.size(); i++){
 		out_1<<PR.at(i).rid<<"\t"<<PR.at(i).score<<endl;
