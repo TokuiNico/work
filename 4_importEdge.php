@@ -37,8 +37,8 @@
 		Parameters: 18,54,55
 	*/
     /**
-     * Step1:   read file1, and get rid and density from each line
-     *          then, insert rid to a list indexPR
+     * Step1:   Get rid and density from each line from ridlist.in
+     *          then, add rids to list listPR
      **/
 	$griddb="grid3x";
 	$filename1="./link/".$griddb."/ridlist.in";
@@ -55,7 +55,8 @@
 	fclose($file1);
 
     /**
-     * Step2:   
+     * Step2:   Get rid, rid_b, and tid from each rid file, which rid in listPR,
+     *          then insert them to database grid3x_edge
      **/
 	for($i=3905; $i <= $indexPR; $i++){
 		$rid=$listPR[$i];
@@ -65,18 +66,18 @@
 		$line=fgets($file2);
 		$line=fgets($file2);
 		$line=fgets($file2);    //get edge of this rid
-		$numRegion = strtok($line," \n\t\r");
+		$numRegion = strtok($line," \n\t\r");   //
 		for($j=0; $j < $numRegion; $j++){
 			$line = fgets($file2);
 			$tok = strtok($line," \n\t\r");
-			$rid_b = $tok;
+			$rid_b = $tok;              //
 			$tok = strtok(" \n\t\r");
-			$numTID = $tok;
+			$numTID = $tok;             //
 			$db_check = new PostgreDB();
 			$db_insert = new PostgreDB();
 			for($k=0; $k < $numTID; $k++){
 				$tok = strtok(" \n\t\r");
-				$tid = $tok;
+				$tid = $tok;            //
 				/*					
 				$db_check->query("SELECT rid_f,rid_b,tid FROM grid3x_edge WHERE rid_f='$rid' AND rid_b='$rid_b' AND tid='$tid' ");
 				if($db_check->num_rows()==0)	$db_insert->query("INSERT INTO grid3x_edge (rid_f,rid_b,tid) VALUES
