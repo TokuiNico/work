@@ -1,8 +1,24 @@
 <?php
+/**
+ * Calculate weight of each edge
+ * 
+ * Input
+ *  DB grid3x_edge
+ *      format: rid_f rid_b tid
+ * Output
+ *  link/grid3x/weight.in
+ *      format: rid_f rid_b weight
+ **/
 	error_reporting(E_ERROR & ~E_NOTICE & ~E_WARNING );
 	//error_reporting(E_ALL);
 	include("../PostgreDB.class.php");
  
+    /**
+     * a node which conatins trajectory id and number of region
+     *
+     * @param   tid     trajectory id
+     * @param   num     number of region
+     **/
 	class Node
 	{	    
 	    public $tid;

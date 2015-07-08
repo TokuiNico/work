@@ -1,3 +1,15 @@
+/**
+ * Compute scores of each PR from links
+ *
+ * Input
+ *  link/grid3x/ridlist.in
+ *      format: Rid density
+ *  link/grid3x/weight.in
+ *      format: rid_f rid_b weight
+ * Output
+ *  link/grid3x/grid3x_PRscore_new_0.2.txt
+ *      format: rid score
+ **/
 #include <stdio.h>
 #include <vector>
 #include <time.h>
@@ -8,13 +20,27 @@
 #include <stdlib.h>
 #include <string.h>
 using namespace std;
-
+/**
+ * 
+ *
+ * @param   rid_f
+ * @param   rid_b
+ * @param   weight
+ **/
 class Edge{
 	public:
 		int rid_f;
 		int rid_b;
 		float weight;
 };
+/**
+ *
+ *
+ * @param   rid
+ * @param   score
+ * @param   inLink
+ * @param   weight
+ **/
 class region{
 	public:
 		int rid; //rid_b
@@ -24,6 +50,12 @@ class region{
 };
 
 vector<region> PR;
+/**
+ * return the score of given region
+ *
+ * @param   rid     region id
+ * @return          the score of region
+ **/
 float seekScore(int rid){
 	float score;
 	for(int i=0; i<PR.size(); i++){
