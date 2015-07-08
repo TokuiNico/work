@@ -1,4 +1,4 @@
-The goal or this Project is to calcualte the score of ROIs, which used to recommend travel trajectories.
+The goal of this Project is to calcualte the score of ROIs, which used to recommend travel trajectories.
 First, read trajectories history and region data from given database.
 Second, tranform the trajectories to a sequences of ROIs.
 Third, Tacke out the edges from sequences of ROIs, and calculate their weight.
