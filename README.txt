@@ -5,14 +5,14 @@ Third, Tacke out the edges from sequences of ROIs, and calculate their weight.
 Finally, calculate scores of each region by summarizing all linked ROIs multiplied by their weight and proportion 
 
 input
-    trajectory	the travel trajectories database
-		format: tid, (tid, index, lon ,lat)...
-    region		the regions that contains density of number of passing trajectories
+    trajectory  the travel trajectories database
+        format: tid, (tid, index, lon ,lat)...
+    region      the regions that contains density of number of passing trajectories
         format: rid, density, range
 
 output
-	the region id and its updated score
-		format:	rid, score
+    the region id and its updated score
+        format:	rid, score
     
 Language
     C++, php
