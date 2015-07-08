@@ -2,8 +2,12 @@
  * Filter transformedTraDB.dat with "non-repeating" Rid in each Trajectory
  * And filter trajectories that do not have regions (i.e., numRid=0)
  *
- * @param infile    input file name, containing trajectory id and its region ids
- * @param outfile   output file name, to save trajectory id and non-repeating region id
+ * INPUT
+ *      data/grid3x_transformedTraDB_13.dat 
+ *          format: tid numRid rid1 rid2 …
+ * OUTPUT
+ *      data/grid3x_transformedTraDBF_13.dat
+ *          format: tid numRid rid1 rid2 …
  **/
 
 #include <vector>

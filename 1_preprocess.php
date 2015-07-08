@@ -138,7 +138,7 @@ for($i=0; $i< $db->num_rows(); $i++){
 		//echo $j."\t".$lon."\t".$lat;
         
         /**
-         * query corresponding region id which density >= densityThreshold
+         * query region which contains points of trajectory and density >= densityThreshold
          **/
 		$result_2=$db_2->query("SELECT rid FROM grid3x WHERE point'($lon,$lat)' @ range AND density>=$densityThreshold");//<--------- grid?x
 		//echo $db_2->num_rows()."\t";
@@ -159,7 +159,7 @@ for($i=0; $i< $db->num_rows(); $i++){
      **/
 	fputs($file2,$tid." ".$listTra[$i][0]);
     /**
-     * export trajectory tid and all containing rids to ./data/{$griddb}_transformedTraDB_{$densityThreshold}.dat
+     * export all containing rids to ./data/{$griddb}_transformedTraDB_{$densityThreshold}.dat
      **/
 	for($j=1; $j<= $listTra[$i][0]; $j++){
 		//echo $listTra[$i][$j]." ";

@@ -3,15 +3,21 @@
  * Select region id , rid_b, and tid, and insert to database grid3x_edge
  *
  * Input
- *  link/grid3x/ridlist.in  Rid list
- *      format: Rid density
- *  link/grid3x/{rid}       Out-edge of Rid
- *      format: density
- *              # of outlinks
- *              numRid rid_b1 rid_b2…
+ *      link/grid3x/ridlist.in  Rid list
+ *          format: Rid density
+ *      link/grid3x_13/{rid}    in link and out link of region
+ *          format: density
+ *                  # of outlinks
+ *                  {out link size
+ *                  out link region, links, tid1, tid2...}
+ *                  ...
+ *                  # of inlinks
+ *                  {in link size
+ *                  in link region, links, tid1, tid2...}
+ *                  ...
  * Output
- *  database grid3x_edge
- *      format: rid_f rid_b tid
+ *      database grid3x_edge
+ *          format: rid_f rid_b tid
  **/
 	error_reporting(E_ERROR & ~E_NOTICE & ~E_WARNING );
 	//error_reporting(E_ALL);

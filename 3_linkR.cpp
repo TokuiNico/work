@@ -1,6 +1,23 @@
-/*
-    Generate link list among PR
-*/
+/**
+ * Calculate the in links and out links of each region
+ *
+ * Input
+ *      data/grid3x_densityThre{density}.dat
+ *          format: Rid, density(initial: 1)
+ * Output
+ *      link/grid3x_13/ridlist.in   region and its density
+ *          format: Rid, density
+ *      link/grid3x_13/{rid}        in link and out link of region
+ *          format: density
+ *                  # of outlinks
+ *                  {out link size
+ *                  out link region, links, tid1, tid2...}
+ *                  ...
+ *                  # of inlinks
+ *                  {in link size
+ *                  in link region, links, tid1, tid2...}
+ *                  ...
+ **/
 
 #include <vector>
 #include <time.h>
@@ -18,6 +35,13 @@ using namespace std;
 
 //#include "linkR.h"
 
+/**
+ * the data of linking regions
+ *
+ * @param   rid         the region id to link
+ * @param   links       number of links between these 2 regions
+ * @param   tids        list of trajectory id passing through these 2 regions
+ **/
 class Item{
 public:
     int rid;
@@ -25,6 +49,16 @@ public:
     vector<int> tids;
 };
 
+/**
+ * the detail of regions
+ *
+ * @param   rid         region id
+ * @param   outlink     the list of out link regions
+ * @param   inlink      the list of in link regions
+ * @param   density     the number of passing through trajectories
+ * @param   score       not use
+ * @param   totalOut    the number of total out links
+ **/
 class Region{
 public:
     int rid;
@@ -35,24 +69,64 @@ public:
     int totalOut; // for total outlinks
 };
 
+/**
+ * @param   PR          a list containing regions data
+ * @param   tempPR      a temp list containing regions data
+ **/
 vector<Region> PR;	
 vector<Region> tempPR;
+
+/**
+ * return index of PR from given region id
+ *
+ * @parame  rid     region id
+ * @return          the the index of rid
+ **/
 int seekIndex(int rid);
+
+/**
+ * Update out link of rid_f and in link of rid_b
+ *
+ * @param   tid         the trajectory id that pass through Rid_f and Rid_b
+ * @param   index_f     the index in PR of Rid_f
+ * @param   index_b     the index in PR of Rid_b
+ * @param   Rid_f       the region which link out
+ * @param   Rid_b       the region which link in
+ **/
 void updateTempPR(int tid, int index_f, int index_b, int Rid_f, int Rid_b);
+
+/**
+ * Check if the index is in given list
+ *
+ * @param   index       the index of region
+ * @param   list        the list contain all region index
+ * @return
+ **/
 bool seekList(int index, vector<int> list);
+
+/**
+ * Update PR with given index and region
+ *
+ * @param   tid
+ * @param   index
+ * @param   tempR
+ * @return
+ **/
 void updatePR(int tid,int index, Region tempR);
 
 int main(int argc, char *argv[]){
-    //parameters ***********************************************************************************************//
+
     //Lines:67,207
     //ifstream infile("input/PRtest1.txt"); 
     //ifstream infile("input/test2-PR-HsinchuThre0.001.dat");
     ifstream infile("data/grid3x_densityThre13.dat");
     //ifstream infile("data/grid_hits_densityThre0.001.dat");
-    //**********************************************************************************************************//
+
     
     
-    //-----------push rid & density to PR----------
+    /**
+     * Step1:   Get rid & density from input file, then push them to list PR
+     **/
     int rid;
     while(infile>>rid){
         int density;
@@ -65,15 +139,18 @@ int main(int argc, char *argv[]){
     }
     infile.close();
     
-    //ifstream in_1("input/traDBtest1.txt"); //****************************************************************************************************
+    //ifstream in_1("input/traDBtest1.txt"); 
     //ifstream in_1("input/test2-TraDB-Hshinchu-1.dat");
     
-    //----- read transformed Trajectory DBF
+
     ifstream in_1("data/grid3x_transformedTraDBF_13.dat");
     vector<Region> emptyPR;
     emptyPR=PR;
     int tid;
     
+    /**
+     * Step2:   update in link and out link of all regions
+     **/
     while(in_1>>tid){
         //cout<<"TID: "<<tid<<endl;
         vector<int> updateList;	//index in PR
@@ -91,7 +168,10 @@ int main(int argc, char *argv[]){
         int Rid_f,Rid_b;
         in_1>>numRid;
         
-        //numRid 2 以上才能建link e.g. Rid1 -> Rid2
+        /** 
+         * Step2.1: Update tempPR.
+         *          If this trajectory has 2 or more regions, then update links of all regions
+         **/
         if(numRid>=2){
             int index_f,index_b;
             bool inserted;
@@ -138,7 +218,9 @@ int main(int argc, char *argv[]){
                 }
             }//
             #endif			
-            //update PR			
+            /**
+             * Step2.1.1:   Update PR from tempPR
+             **/
             for(int i=0; i<updateList.size(); i++){
                 //cout<<"before index...\n";						
                 int index=updateList.at(i);
@@ -199,8 +281,11 @@ int main(int argc, char *argv[]){
         updateList.erase(updateList.begin(),updateList.end());
         //if(tid==142545) system("pause");
     }
-    in_1.close();	
-    //update totalout of PR
+    in_1.close();
+    
+    /**
+     * Step3:   update number of total out links of all regions
+     **/
     for(int i=0; i<PR.size(); i++){
         int temp=0;
         for(int j=0; j<PR.at(i).outlink.size(); j++){
@@ -209,7 +294,10 @@ int main(int argc, char *argv[]){
         PR.at(i).totalOut=temp;
     }
     tempPR.erase(tempPR.begin(),tempPR.end());
-    //For output the result of linkR
+    
+    /**
+     * Step4:   output the result
+     **/
     #if 1
     char dirI[]="./link/grid3x_13/";	//****************************************************************************************************
     char *filename;
@@ -283,10 +371,7 @@ int main(int argc, char *argv[]){
 }
 
 
-/****************************************************
-* input:  rid
-* output: 此rid在PR中的index
-*****************************************************/
+
 int seekIndex(int rid){
     int index;
     for(int i=0; i<PR.size(); i++){
@@ -302,9 +387,14 @@ void updateTempPR(int tid, int index_f, int index_b, int Rid_f, int Rid_b){
     Region tempR;
     Item tempI;
     int length;
-    //For Outlink
+
+    /**
+     * For Outlink
+     * Update tempPR by inserting all out link region
+     **/
     tempR.inlink=tempPR.at(index_f).inlink;
     length=tempPR.at(index_f).outlink.size();
+    
     if(length==0){
         //insert links
         //if(tid==37398 && Rid_f==20165) cout<<"Outlink Insert Rid="<<Rid_b<<endl;
@@ -362,9 +452,14 @@ void updateTempPR(int tid, int index_f, int index_b, int Rid_f, int Rid_b){
     for(int k=0; k<tempPR.at(index_f).outlink.size(); k++)
         if(tid==111862 && Rid_f==10685210) cout<<Rid_f<<" => "<<tempPR.at(index_f).outlink.at(k).rid<<endl;
     */
+    
     tempR.outlink.erase(tempR.outlink.begin(),tempR.outlink.end());
     tempR.inlink.erase(tempR.inlink.begin(),tempR.inlink.end());
-    //For Inlink
+    
+    /**
+     * For Inlink
+     * Update tempPR by inserting all in link region
+     **/
     tempR.outlink=tempPR.at(index_b).outlink;
     length=tempPR.at(index_b).inlink.size();
     if(length==0){
@@ -434,7 +529,10 @@ bool seekList(int index, vector<int> list){
 void updatePR(int tid, int index, Region tempR){
     int length;
     vector<Item> tempList;
-    //For outlink
+    
+    /**
+     * For outlink
+     **/
     length=PR.at(index).outlink.size();
     //cout<<"Outlinks Length= "<<length<<endl;
     int tmp=tempR.outlink.size();
@@ -507,7 +605,9 @@ void updatePR(int tid, int index, Region tempR){
             tempList.erase(tempList.begin(),tempList.end());
         }
     }
-    //For inlink
+    /**
+     * For inlink
+     **/
     length=PR.at(index).inlink.size();
     //cout<<"Inlinks Length= "<<length<<endl;
     tmp=tempR.inlink.size();
