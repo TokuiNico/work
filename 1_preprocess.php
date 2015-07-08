@@ -1,24 +1,48 @@
 <?php
-/***********************************************
-*   input: trajectories,density of grids
-*   output: ROI sequences
-*   format traID numRid Rid1 Rid2 ...
-************************************************/
+/**
+ * This file returns the lists of potential regions and density of potential regions
+ * 
+ * Input: Database
+ *      trajectory
+ *          format: tid
+ *      Gpspoint
+ *          format: tid index lng lat
+ *      grid3x
+ *          format: rid density range
+ *
+ * Output:
+ *      data/grid3x_densityThre{density}.dat 
+ *          format: rid density
+ *      data/grid3x_transformedTraDB_{density}.dat 
+ *          format: tid numRid rid1 rid2 …
+ *
+ **/
+ 
 error_reporting(E_ERROR & ~E_NOTICE & ~E_WARNING );
 //error_reporting(E_ALL);
 include("../PostgreDB.class.php");
 
 
 
-// parameters	---------//
-//Lines: 27,84; 21,68 
+//Lines: 27,84; 21,68
+/**
+ * parameters
+ * @param   griddb              the name indicating directories of filename1 and filename2(default : grid3x)
+ * @param   densityThreshold    a positive integer indicating region density threshold
+ * @param   filename1           the file name to save rids and densities of region which density threshold >= densityThreshold
+ * @param   filename2           the file name to save trajectory data
+ **/
 $griddb="grid3x";
 $densityThreshold=4;
 $filename1="./data/".$griddb."_densityThre".$densityThreshold.".dat";
 $filename2="./data/".$griddb."_transformedTraDB_".$densityThreshold.".dat";
 //--------------------//
 
-//*	Step1:Generate potential regions w.r.t. threshold	******************************************************//
+/**
+ * Step1:   Generate potential regions w.r.t. threshold
+ *          Select regions that their density threshold are great than or equal to given threshold value,
+ *          and save region id and its density to output file
+ **/
 
 $db=new PostgreDB();
 $result=$db->query("SELECT count(tid) FROM trajectory");
@@ -39,8 +63,17 @@ for($i=0; $i< $db->num_rows(); $i++){
 fclose($file1);
 
 
-//*	Step2:Transform trajectories	**************************************************************************//
 
+ 
+/**
+ * Check if it a first line. return 1 if it is a first line of file
+ * or return 0 and set rid and density with this line
+ *
+ * @param   line        the line got from input data, is a string
+ * @param   rid         the region id, is reference type, default is null
+ * @param   density     the density of this region, is reference type, default is null
+ * @return              1: it's the first line, or 0: otherwise
+ **/
 function parse_PR($line,  &$rid, &$density)
 {
 	$tok = strtok($line,"\n\t\r");
@@ -53,6 +86,16 @@ function parse_PR($line,  &$rid, &$density)
 		}
 }
 
+/**
+ * Step2:   Transform trajectories
+ *          Read filename1, and gets line and rid from each line of file.
+ *          Finally, save rid to listPR
+ *
+ * @param   line        the line got from input file
+ * @param   rid         the region id got from @param line
+ * @param   density     the density of region got from @param line
+ * @param   ListPR      a list save region id
+ **/
 $file=fopen($filename1,"r");
 $line=fgets($file);
 $indexPR=0;
@@ -69,10 +112,10 @@ fclose($file);
 
 $db=new PostgreDB();
 
-/***************************************************************
-* 將 trajectory 轉換成 frequent region 順序
-****************************************************************/
-//---------------query all trajectory id-------------------
+/**
+ * Step3:   Select all trajectories from traofuser DB, and find containing points including lat & lng.
+ *          Then, transform each point to corresponding region which density >= densityThreshold
+ **/
 $result=$db->query("SELECT tid FROM trajectory ORDER BY tid ASC");
 //$result=$db->query("SELECT distinct(tid) FROM traofuser ORDER BY tid ASC"); //for hits
 $file2=fopen($filename2,"a");
@@ -80,7 +123,9 @@ for($i=0; $i< $db->num_rows(); $i++){
 	echo $i." "."running... \n";
 	$tid=pg_result($result,$i,'tid');
 	$db_1=new PostgreDB();
-    //-------------query all points( lon & lat ) in trajectory $tid -----------------------
+    /**
+     * query all points( lon & lat ) in each trajectory
+     **/
 	$result_1=$db_1->query("SELECT tid,index,lon,lat FROM gpspoint WHERE tid=$tid ORDER BY index ASC");
 	echo $tid." ".$db_1->num_rows()."\n";
 	$indexTra=1;
@@ -91,7 +136,10 @@ for($i=0; $i< $db->num_rows(); $i++){
 		$lat=pg_result($result_1, $j, 'lat');
 		$db_2=new PostgreDB();
 		//echo $j."\t".$lon."\t".$lat;
-        //-------------對每個point找在其位置的frequent rid----------------------------//
+        
+        /**
+         * query corresponding region id which density >= densityThreshold
+         **/
 		$result_2=$db_2->query("SELECT rid FROM grid3x WHERE point'($lon,$lat)' @ range AND density>=$densityThreshold");//<--------- grid?x
 		//echo $db_2->num_rows()."\t";
 		$rid=pg_result($result_2,0);
@@ -105,10 +153,14 @@ for($i=0; $i< $db->num_rows(); $i++){
 	}
 	$listTra[$i][0]=$numRid;
 	//echo "\n".$tid." ";
-    
-    //輸出 trajectory id 和 number of rid
+
+    /**
+     * export trajectory id and number of rid to ./data/{$griddb}_transformedTraDB_{$densityThreshold}.dat
+     **/
 	fputs($file2,$tid." ".$listTra[$i][0]);
-    //輸出 trajectory tid 的所有 rid number
+    /**
+     * export trajectory tid and all containing rids to ./data/{$griddb}_transformedTraDB_{$densityThreshold}.dat
+     **/
 	for($j=1; $j<= $listTra[$i][0]; $j++){
 		//echo $listTra[$i][$j]." ";
 		fputs($file2," ".$listTra[$i][$j]);
@@ -120,7 +172,9 @@ for($i=0; $i< $db->num_rows(); $i++){
 fclose($file2);
 
 
-//Transform trajectories in a fix range	*********************************************************************//
+/**
+ * Transform trajectories in a fix range
+ **/
 /*
 function parse_tid($line,  &$tid)
 {
