@@ -1,13 +1,18 @@
-This Project is to read jrajectory and region data, generate scores of each rerion
+The goal or this Project is to calcualte the score of ROIs, which used to recommend travel trajectories.
+First, read trajectories history and region data from given database.
+Second, tranform the trajectories to a sequences of ROIs.
+Third, Tacke out the edges from sequences of ROIs, and calculate their weight.
+Finally, calculate scores of each region by summarizing all linked ROIs multiplied by their weight and proportion 
 
 input
-    trajectory
-        format: tid, (tid, index, lon ,lat)¡K
-    region
+    trajectory	the travel trajectories database.
+		format: tid, (tid, index, lon ,lat)¡K
+    region		the regions that contains density of number of passing trajectories.
         format: rid, density, range
 
 output
-    rid, score
+	the region id and its updated score
+		format:	rid, score
     
 Language
     C++, php
