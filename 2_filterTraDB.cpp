@@ -1,7 +1,10 @@
-/*
-	Filter transformedTraDB.dat with "non-repeating" Rid in each Trajectory
-	Filter trajectories that do not have regions (i.e., numRid=0)
-*/
+/**
+ * Filter transformedTraDB.dat with "non-repeating" Rid in each Trajectory
+ * And filter trajectories that do not have regions (i.e., numRid=0)
+ *
+ * @param infile    input file name, containing trajectory id and its region ids
+ * @param outfile   output file name, to save trajectory id and non-repeating region id
+ **/
 
 #include <vector>
 #include <time.h>
@@ -37,11 +40,10 @@ int main(int argc, char *argv[]){
 		index++;
 	}
 	*/
-	//parameters ************************************************************//
+    
 	ifstream infile("./data/grid3x_transformedTraDB_13.dat");
 	ofstream outfile("./data/grid3x_transformedTraDBF_13.dat");
-	//parameters ************************************************************//
-	
+
 	int numRid;
 	while(infile>>tid){
 		//if(found(tid,index)==1 && tid<144663){ ///////////////////////////////////
@@ -59,7 +61,7 @@ int main(int argc, char *argv[]){
 			infile>>preRid;
 			for(int i=1; i<numRid; i++){
 				infile>>tempRid;
-				if(tempRid!=preRid){					
+				if(tempRid!=preRid){
 					listTra[indexRid]=preRid;
 					indexRid++;
 					preRid=tempRid;
