@@ -6,7 +6,7 @@ Descripts
     Finally, calculate scores of each region by summarizing all linked ROIs multiplied by their weight and proportion 
 
 Input
-    The input are 2 database, trajectory and region.
+    The input are 2 database, trajectory and region. the type of database is postgresql.
     Trajectory is a database that contains sequences of points for each trajectory.
         format: tid, tid, index, lon ,lat
     Region is a database that contains region id, rang, and density, which means the number of trajectory that passes through this region
@@ -32,3 +32,9 @@ File
         Calculate weight of each edge
     6_scorePR_new.cpp
         Compute scores of each PR from links
+
+How to run
+    1.  compile 2_filterTraDB.cpp to 2_filterTraDB
+        compile 3_linkR.cpp to 3_linkR
+        compile 6_scorePR_new.cpp to 6_scorePR_new
+    2.  sequentially excute 1_preprocess.php, 2_filterTraDB, 3_linkR, 4_importEdge.php, 5_weight.php, 6_scorePR_new
